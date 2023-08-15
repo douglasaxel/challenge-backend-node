@@ -1,0 +1,33 @@
+{
+	"compilerOptions": {
+		"target": "es2021",
+		"module": "commonjs",
+		"baseUrl": "./",
+		"paths": {
+			"@error/*": [
+				"./src/error/*"
+			],
+			"@utils/*": [
+				"./src/utils/*"
+			],
+			"@entities/*": [
+				"./src/entities/*"
+			],
+			"@modules/*": [
+				"./src/modules/*"
+			],
+			"@middlewares/*": [
+				"./src/middlewares/*"
+			],
+			"@repositories/*": [
+				"./src/repositories/*"
+			]
+		},
+		"resolveJsonModule": true,
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"skipLibCheck": true
+	}
+}

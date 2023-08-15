@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "0.0.0.0:27017:27017"
+    networks:
+      - mongo-network
+    volumes:
+      - ./docker/images/mongodb/data/db:/data/db
+      - ./docker/images/mongodb/data/configdb:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: "mongodb://root:example@mongo:27017/"
+    ports:
+      - "0.0.0.0:8081:8081"
+    networks:
+      - mongo-network
+    depends_on:
+      - mongo
+
+networks:
+  mongo-network:
+    name: mongo-network
+    external: false
