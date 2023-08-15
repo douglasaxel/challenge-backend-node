@@ -1,7 +1,6 @@
-import { decode as jwtDecode, sign as jwtSign, verify as jwtVerify } from 'jsonwebtoken'
+import { sign as jwtSign, verify as jwtVerify } from 'jsonwebtoken'
 
 export function signToken(payload: string | Buffer | object) {
-	console.log('payload', payload)
 	const token = jwtSign(payload, process.env.JWT_SECRET ?? 'teste')
 
 	return token

@@ -1,67 +1,44 @@
-import IBookRepository from '@repositories/IBookRepository'
-import MockBookRepository from '@repositories/implementation/MockBookRepository'
+import MockUserRepository from '@repositories/implementation/MockUserRepository'
 
 import { AuthService } from './AuthService'
-import { LoginUserDTO } from './dto/LoginUserDto'
-import { UpdateBookDTO } from './dto/UpdateBookDto'
+import { CreateUserDTO } from './dto/CreateUserDTO'
 
-describe('BookService', () => {
-	let bookRepository: IBookRepository
-	let bookService: AuthService
+describe('AuthService', () => {
+	let userRepository: MockUserRepository
+	let authService: AuthService
 
 	beforeAll(() => {
-		bookRepository = new MockBookRepository()
-		bookService = new AuthService(bookRepository)
+		userRepository = new MockUserRepository()
+		authService = new AuthService(userRepository)
 	})
 
-	it('should be able to create a book', async () => {
-		const bookData: CreateBookDTO = {
-			title: 'Livro 1',
-			author: 'Fulano Otavio',
-			isbn: '123456',
-			description: 'Descrição Livro 1'
+	it('should be able to create a user', async () => {
+		const userData: CreateUserDTO = {
+			name: 'Fulano',
+			email: 'teste@teste.com',
+			password: '123123'
 		}
 
-		const book = await bookService.create(bookData)
+		const user = await authService.create(userData)
 
-		expect(book).toHaveProperty('id')
-		expect(book).toHaveProperty('isRented')
-		expect(book.title).toBe(bookData.title)
+		expect(user).toHaveProperty('id')
+		expect(user.email).toBe(userData.email)
 	})
 
-	it('should be able to update a book', async () => {
-		const bookData: CreateBookDTO = {
-			title: 'Livro 1',
-			author: 'Fulano Otavio',
-			isbn: '123456',
-			description: 'Descrição Livro 1'
-		}
-		const updateData: UpdateBookDTO = {
-			title: 'Livro 1 Editado',
-			description: 'Descrição Livro 1 Editado',
+	it('should be able to sign in', async () => {
+		const userData: CreateUserDTO = {
+			name: 'Fulano',
+			email: 'teste@teste.com',
+			password: '123123'
 		}
 
-		const book = await bookService.create(bookData)
-		const updatedBook = await bookService.update(updateData, book.id)
+		await authService.create(userData)
+		const logged = await authService.login({
+			email: userData.email,
+			password: userData.password,
+		})
 
-		expect(updatedBook.title).not.toBe(bookData.title)
-		expect(updatedBook.description).toBe(updateData.description)
-	})
-
-	it('should be able to find a book by id', async () => {
-		const bookData: CreateBookDTO = {
-			title: 'Livro 1',
-			author: 'Fulano Otavio',
-			isbn: '123456',
-			description: 'Descrição Livro 1'
-		}
-
-		const book = await bookService.create(bookData)
-		const findedBook = await bookService.getOne(book.id)
-
-		expect(findedBook).not.toBeNull()
-		expect(findedBook).not.toBeUndefined()
-		expect(findedBook?.title).toBe(book.title)
-		expect(findedBook?.description).toBe(book.description)
+		expect(logged).toHaveProperty('user')
+		expect(logged).toHaveProperty('token')
 	})
 })

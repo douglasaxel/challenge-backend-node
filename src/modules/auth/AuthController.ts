@@ -28,13 +28,9 @@ export class AuthController {
 		const { email, password } = req.body as LoginUserDTO
 
 		try {
-			const user = await this.authService.login({ email, password })
-			const token = signToken({
-				id: user.id,
-				name: user.name,
-			})
+			const result = await this.authService.login({ email, password })
 
-			return res.json({ user, token })
+			return res.json(result)
 		} catch (err) {
 			next(err)
 		}
